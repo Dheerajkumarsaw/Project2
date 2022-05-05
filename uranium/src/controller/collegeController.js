@@ -9,7 +9,7 @@ const collegeCreate = async function (req, res) {
     try {
         const requestBody = req.body;
         if (Object.keys(requestBody).length === 0) return res.status(400).send({ status: false, message: "Please enter College details" });
-        const { name, fullName, logoLink, } = requestBody; //Destructuring
+        let { name, fullName, logoLink, } = requestBody; //Destructuring
 
         const unique = await collegeModel.findOne({ name: name });
         if (unique) return res.status(400).send({ status: false, message: "College Allready Exist" })
@@ -22,7 +22,7 @@ const collegeCreate = async function (req, res) {
         if (!regx.test(logoLink)) return res.status(400).send({ status: false, message: "Enter Valid Url" })
 
         const createCollege = await collegeModel.create(requestBody)
-        res.status(201).send({ status: true, message: "College is successfully Created", data: createCollege })
+        res.status(201).send({ status: true, message: "College is successfully Created", data: { name: createCollege.name, fullName: createCollege.fullName, logoLink: createCollege.logoLink, isDeleted: createCollege.isDeleted } })
     }
     catch (err) {
         res.status(500).send({ status: false, message: err.message })

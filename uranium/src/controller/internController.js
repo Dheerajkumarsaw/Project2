@@ -14,7 +14,7 @@ const createIntern = async function (req, res) {
         const requestBody = req.body;
         if (Object.keys(requestBody).length == 0) return res.status(400).send({ status: false, message: "Enter Student Details" });
 
-        const { name, mobile, email, collegeName } = requestBody; //destructuring
+        let { name, mobile, email, collegeName } = requestBody; //destructuring
 
         if (!isValid(name)) return res.status(400).send({ status: false, message: "Name is required" });
 
@@ -23,8 +23,8 @@ const createIntern = async function (req, res) {
         if (!regx.test(email)) return res.status(400).send({ status: false, message: "Enter Valid Email" });
 
         if (!isValid(mobile)) return res.status(400).send({ status: false, message: "Mobile no is required" });
-        const valid = mobile.length;
-        if (!(valid == 10)) return res.status(400).send({ status: false, message: "Enter Valid Mobile no" });
+        const mobileRegx = /^(\+\d{1,3}[- ]?)?\d{10}$/;
+        if (!mobileRegx.test(mobile)) return res.status(400).send({ status: false, message: "Enter Valid Mobile no" })
 
         if (!isValid(collegeName)) return res.status(400).send({ status: false, message: "College Name is Required" });
 
@@ -32,13 +32,15 @@ const createIntern = async function (req, res) {
         if (!college) return res.status(404).send({ status: false, message: `${collegeName} Not Exist Register First` });
         const collegeId = college._id;
 
-        const unique = await internModel.findOne({ email: email, mobile: mobile, collegeId: collegeId });
+        const unique = await internModel.findOne({ email: email, mobile: mobile });
         if (unique) return res.status(400).send({ status: false, message: "Use Different Email or Password" }); ////change status code
 
         requestBody["collegeId"] = collegeId;
-
         const internCreate = await internModel.create(requestBody);
-        res.status(201).send({ status: true, message: "Intern created succssfully", data: internCreate })
+        res.status(201).send({
+            status: true, message: "Intern created succssfully",
+            data: { isDeleted: internCreate.isDeleted, name: internCreate.name, email: internCreate.email, mobile: internCreate.mobile, collegeId: internCreate.collegeId }
+        })
     }
     catch (err) {
         res.status(500).send({ status: false, message: err.message })
@@ -57,10 +59,11 @@ const collegeDetails = async function (req, res) {
         data["interests"] = [];
         const modelCollegeId = college._id;
 
-        const internList = await internModel.find({ collegeId: modelCollegeId });
+        const internList = await internModel.find({ collegeId: modelCollegeId }).select({_id:1,name:1,email:1,mobile:1});
+        
         if (internList.length == 0) return res.status(404).send({ status: false, message: `${collegeName} Not Have Any Internship` });
-        data["interests"] = [...internList]
-        res.status(200).send({ status: true, data: data });
+            data["interests"] = [...internList]
+        res.status(200).send({ status: true, data:data });
 
     } catch (err) {
         res.status(500).send({ status: false, message: err.message })
