@@ -30,8 +30,8 @@ const createIntern = async function (req, res) {
         if (!college) return res.status(404).send({ status: false, message: `${collegeName} Not Exist Register First` });
         const collegeId = college._id;
 
-        let unique = await internModel.findOne({ email: email }); //checkine unique by email
-        unique = await internModel.findOne({ mobile: mobile }) //checkine unique by mobile
+        let unique = await internModel.findOne({ email: email }); //checking unique by email
+        unique = await internModel.findOne({ mobile: mobile }) //checking unique by mobile
         if (unique) return res.status(400).send({ status: false, message: "Use Different Email or Mobile No" }); ////change status code
 
         requestBody["collegeId"] = collegeId;
