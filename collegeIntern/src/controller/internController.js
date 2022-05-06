@@ -56,7 +56,6 @@ const collegeDetails = async function (req, res) {
         if (!college) return res.status(404).send({ status: false, message: `${collegeName} Not Found, Register First` });
         const { name, fullName, logoLink } = college
         const data = { name, fullName, logoLink };
-        // data["interests"] = [];
         const modelCollegeId = college._id;
 
         const internList = await internModel.find({ collegeId: modelCollegeId }).select({ _id: 1, name: 1, email: 1, mobile: 1 });
@@ -64,7 +63,6 @@ const collegeDetails = async function (req, res) {
         if (internList.length == 0) return res.status(404).send({ status: false, message: `${collegeName} Not Have Any Internship` });
         data["interests"] = internList;
         res.status(200).send({ status: true, data: data });
-
     } catch (err) {
         res.status(500).send({ status: false, message: err.message })
     }
