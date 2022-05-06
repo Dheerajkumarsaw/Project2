@@ -32,7 +32,7 @@ const createIntern = async function (req, res) {
 
         const uniqueE = await internModel.findOne({ email: email }); //checking unique by email
         const uniqueM = await internModel.findOne({ mobile: mobile }) //checking unique by mobile
-        if (uniqueE) return res.status(400).send({ status: false, message: "Use Different Email " }); 
+        if (uniqueE) return res.status(400).send({ status: false, message: "Use Different Email " });
         if (uniqueM) return res.status(400).send({ status: false, message: "Use Different Mobile No" });
 
         requestBody["collegeId"] = collegeId;
@@ -56,13 +56,13 @@ const collegeDetails = async function (req, res) {
         if (!college) return res.status(404).send({ status: false, message: `${collegeName} Not Found, Register First` });
         const { name, fullName, logoLink } = college
         const data = { name, fullName, logoLink };
-        data["interests"] = [];
+        // data["interests"] = [];
         const modelCollegeId = college._id;
 
         const internList = await internModel.find({ collegeId: modelCollegeId }).select({ _id: 1, name: 1, email: 1, mobile: 1 });
 
         if (internList.length == 0) return res.status(404).send({ status: false, message: `${collegeName} Not Have Any Internship` });
-        data["interests"] = [...internList]
+        data["interests"] = internList;
         res.status(200).send({ status: true, data: data });
 
     } catch (err) {
@@ -72,3 +72,16 @@ const collegeDetails = async function (req, res) {
 module.exports.createIntern = createIntern;
 module.exports.collegeDetails = collegeDetails
 
+
+
+{
+    let b=8
+    {
+        {
+            let a=9
+            {
+                add=a+b
+            }
+        }
+    }
+}
