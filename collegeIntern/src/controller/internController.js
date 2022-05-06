@@ -32,8 +32,8 @@ const createIntern = async function (req, res) {
 
         const uniqueE = await internModel.findOne({ email: email }); //checking unique by email
         const uniqueM = await internModel.findOne({ mobile: mobile }) //checking unique by mobile
-        if (uniqueE) return res.status(400).send({ status: false, message: "Use Different Email " }); ////change status code
-        if (uniqueM) return res.status(400).send({ status: false, message: "Use Different Mobile No" }); ////change status code
+        if (uniqueE) return res.status(400).send({ status: false, message: "Use Different Email " }); 
+        if (uniqueM) return res.status(400).send({ status: false, message: "Use Different Mobile No" });
 
         requestBody["collegeId"] = collegeId;
         const internCreate = await internModel.create(requestBody);
@@ -71,3 +71,4 @@ const collegeDetails = async function (req, res) {
 }
 module.exports.createIntern = createIntern;
 module.exports.collegeDetails = collegeDetails
+
