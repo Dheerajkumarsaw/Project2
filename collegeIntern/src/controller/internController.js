@@ -60,26 +60,11 @@ const collegeDetails = async function (req, res) {
 
         const internList = await internModel.find({ collegeId: modelCollegeId }).select({ _id: 1, name: 1, email: 1, mobile: 1 });
 
-        if (internList.length == 0) return res.status(404).send({ status: false, message: `${collegeName} Not Have Any Internship` });
+        if (internList.length == 0) return res.status(400).send({ status: false, message: `${collegeName} Not Have Any Internship` });
         data["interests"] = internList;
         res.status(200).send({ status: true, data: data });
     } catch (err) {
         res.status(500).send({ status: false, message: err.message })
     }
 }
-module.exports.createIntern = createIntern;
-module.exports.collegeDetails = collegeDetails
-
-
-
-{
-    let b=8
-    {
-        {
-            let a=9
-            {
-                add=a+b
-            }
-        }
-    }
-}
+module.exports = { createIntern, collegeDetails }
